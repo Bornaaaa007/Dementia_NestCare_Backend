@@ -3,23 +3,37 @@ import express from 'express';
 import cors from 'cors';
 import { toNodeHandler } from 'better-auth/node';
 import connectDB from './config/db.js';
-import { auth } from './lib/auth.js';
-import { requireAuth } from './middleware/requireAuth.js';
-import patientRoutes from './routes/patients.js';
+import { auth, db } from './lib/auth.js';
+import patientsRouter from './routes/patients.js';
+import patientPublicRouter from './routes/patientPublic.js';
+import Patient from './models/Patient.js';
+import PatientLink from './models/PatientLink.js';
 
 const app = express();
 
 const origins = (process.env.CORS_ORIGINS || '').split(',').filter(Boolean);
 app.use(origins.length ? cors({ origin: origins, credentials: true }) : cors());
 
-// Better Auth handler MUST come before express.json()
 app.all('/api/auth/*splat', toNodeHandler(auth));
 
 app.use(express.json());
 
 app.get('/', (req, res) => res.json({ status: 'NestCare API running' }));
-app.get('/api/me', requireAuth, (req, res) => res.json({ user: req.user }));
-app.use('/patients', requireAuth, patientRoutes);
+
+// quick-view routes — no auth, just to see what's in the DB
+app.get('/api/users', async (req, res) => {
+  const users = await db.collection('user').find({}, { projection: { password: 0 } }).toArray();
+  res.json({ users });
+});
+
+app.get('/api/patients', async (req, res) => {
+  const patients = await Patient.find();
+  const links = await PatientLink.find();
+  res.json({ patients, links });
+});
+
+app.use('/api/patients', patientsRouter);
+app.use('/api/patient', patientPublicRouter);
 
 const PORT = process.env.PORT || 5000;
 

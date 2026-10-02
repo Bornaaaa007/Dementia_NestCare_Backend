@@ -10,12 +10,13 @@
   "dependencies": {
     "@better-auth/expo": "^1.7.6",
     "@better-auth/mongo-adapter": "^1.7.6",
-    "better-auth": "^1.7.6",
+    "better-auth": "^1.7.7",
     "cors": "^2.8.6",
     "dotenv": "^16.6.1",
     "express": "^5.2.1",
     "mongodb": "^7.7.0",
-    "mongoose": "^8.24.4"
+    "mongoose": "^8.24.4",
+    "nodemon": "^3.1.14"
   },
   "type": "module"
 }
