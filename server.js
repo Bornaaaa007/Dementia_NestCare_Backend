@@ -14,6 +14,13 @@ const app = express();
 const origins = (process.env.CORS_ORIGINS || '').split(',').filter(Boolean);
 app.use(origins.length ? cors({ origin: origins, credentials: true }) : cors());
 
+app.use('/api/auth', (req, res, next) => {
+  console.log('--- Auth request debug ---');
+  console.log('Origin header:', req.headers.origin);
+  console.log('All headers:', req.headers);
+  next();
+});
+
 app.all('/api/auth/*splat', toNodeHandler(auth));
 
 app.use(express.json());

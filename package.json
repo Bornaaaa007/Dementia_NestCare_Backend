@@ -8,7 +8,7 @@
     "dev": "node --watch server.js"
   },
   "dependencies": {
-    "@better-auth/expo": "^1.7.6",
+    "@better-auth/expo": "^1.7.7",
     "@better-auth/mongo-adapter": "^1.7.6",
     "better-auth": "^1.7.7",
     "cors": "^2.8.6",
